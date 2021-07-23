@@ -24,7 +24,10 @@ class BlockCategoryModule extends AbstractModule
             return;
         }
 
-        add_filter('block_categories', function ($categories) {
+        // check for the new filter introduced in WordPress 5.8
+        $hookName = has_filter('block_categories_all') ? 'block_categories_all' : 'block_categories';
+
+        add_filter($hookName, function ($categories) {
             $categories = $this->collect($categories)->keyBy('slug');
 
             return $this->config->map(function ($value, $key) use ($categories) {
